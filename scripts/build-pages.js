@@ -35,6 +35,8 @@ function transformHtml(content) {
   content = content.replace(/(href|src)="\.\.\/(styles|scripts|images)\//g, '$1="$2/');
   // remove leading slash for assets/links
   content = content.replace(/(href|src)="\//g, '$1="');
+  // ensure logo/home links point to index.html (we don't publish a separate home.html)
+  content = content.replace(/href\s*=\s*"home\.html"/g, 'href="index.html"');
   // Optional: base href could be injected if needed
   return content;
 }
