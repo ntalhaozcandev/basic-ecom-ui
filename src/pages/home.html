@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Ecom</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="home.html">Simple Ecom</a>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="🔍 Search products...">
+                <select id="category">
+                    <option value="all">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="books">Books</option>
+                    <option value="home">Home & Garden</option>
+                    <option value="sports">Sports & Outdoors</option>
+                    <option value="beauty">Beauty & Health</option>
+                </select>
+            </div>
+            <nav>
+                <a href="login.html">Login</a>
+            </nav>
+            <div class="header-right">
+                <!-- Auth section will be injected here by auth-manager -->
+                <button class="cart-btn">
+                    🛒 Cart (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+
+    <main>
+        <div class="main-content">
+            <!-- Filter Sidebar -->
+            <aside class="filter-sidebar">
+                <div class="filter-header">
+                    <h3>Filters</h3>
+                    <button id="clear-filters" class="clear-filters-btn">Clear All</button>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="filter-section">
+                    <h4>Category</h4>
+                    <div id="category-filters" class="filter-options">
+                        <!-- Category checkboxes will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Price Range Filter -->
+                <div class="filter-section">
+                    <h4>Price Range</h4>
+                    <div class="price-range">
+                        <div class="price-inputs">
+                            <input type="number" id="min-price" placeholder="Min" min="0" step="0.01">
+                            <span>to</span>
+                            <input type="number" id="max-price" placeholder="Max" min="0" step="0.01">
+                        </div>
+                        <button id="apply-price-filter" class="apply-price-btn">Apply</button>
+                    </div>
+                </div>
+                
+                <!-- Sort Options -->
+                <div class="filter-section">
+                    <h4>Sort By</h4>
+                    <select id="sort-options" class="sort-select">
+                        <option value="">Default</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                        <option value="name-desc">Name: Z to A</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+                
+                <!-- Availability Filter -->
+                <div class="filter-section">
+                    <h4>Availability</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" id="in-stock" value="true">
+                            <span>In Stock</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="out-of-stock" value="false">
+                            <span>Out of Stock</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Main Product Area -->
+            <div class="product-area">
+                <div class="product-header">
+                    <div class="results-info">
+                        <span id="product-count">Loading products...</span>
+                    </div>
+                    <button id="toggle-filters" class="toggle-filters-btn">
+                        <span>☰</span> Filters
+                    </button>
+                </div>
+                <div id="product-list">
+                    <!-- Products will be loaded by JavaScript -->
+                </div>
+                <div id="pagination" class="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart backdrop -->
+    <div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+    
+    <!-- Filter backdrop for mobile -->
+    <div id="filter-backdrop" class="filter-backdrop" onclick="closeFilters()"></div>
+
+    <!-- Cart sidebar -->
+    <aside id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Cart</h2>
+            <button class="cart-close-btn" onclick="closeCart()">&times;</button>
+        </div>
+        <ul id="cart-items"></ul>
+        <p id="cart-total"><strong>Total:</strong> $0.00</p>
+        <button class="go-to-cart-btn" onclick="goToCartPage()">Go to Cart</button>
+        <button class="checkout-btn" onclick="proceedToCheckout()">Checkout</button>
+    </aside>
+
+    <footer>
+        <p>&copy; 2025 Simple Ecom. All rights reserved.</p>
+    </footer>
+
+    <!-- Load scripts in proper order -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth-manager.js"></script>
+    <script src="../scripts/cart-manager.js"></script>
+    <script src="../scripts/products.js"></script>
+    <script src="../scripts/order-manager.js"></script>
+    <script src="../scripts/script.js"></script>
+</body>
+
+</html>
