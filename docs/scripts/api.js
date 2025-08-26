@@ -2,7 +2,10 @@
 class ApiClient {
     constructor() {
         // Configure your backend API base URL here
-        this.baseURL = 'http://localhost:3000/api'; // Update this to match your backend
+        // You can override at runtime by setting window.API_BASE_URL
+        this.baseURL = (typeof window !== 'undefined' && window.API_BASE_URL)
+            ? window.API_BASE_URL
+            : 'https://basic-ecom-backend-kncy.onrender.com/api';
         this.headers = {
             'Content-Type': 'application/json',
         };
