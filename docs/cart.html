@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Simple Ecom</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="home.html">Simple Ecom</a>
+            </div>
+            <section class="search-section">
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search products...">
+                    <select id="category">
+                        <option value="all">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="books">Books</option>
+                    </select>
+                </div>
+            </section>
+            <nav>
+                <a href="login.html">Login</a>
+            </nav>
+            <div class="header-right">
+                <!-- Auth section will be injected here by auth-manager -->
+                <button class="cart-btn">
+                    🛒 Cart (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="home.html">Home</a> / Shopping Cart
+    </nav>
+
+    <main class="cart-main">
+        <div class="cart-container">
+            <h1>Shopping Cart</h1>
+
+            <div class="cart-content">
+                <div class="cart-items-section">
+                    <div id="cart-empty" class="cart-empty" style="display: none;">
+                        <div class="empty-cart-message">
+                            <h2>Your cart is empty</h2>
+                            <p>Looks like you haven't added any items to your cart yet.</p>
+                            <a href="home.html" class="continue-shopping-btn">Continue Shopping</a>
+                        </div>
+                    </div>
+
+                    <div id="cart-items-container" class="cart-items-container">
+                        <div class="cart-header">
+                            <div class="cart-header-item">Product</div>
+                            <div class="cart-header-price">Price</div>
+                            <div class="cart-header-quantity">Quantity</div>
+                            <div class="cart-header-total">Total</div>
+                            <div class="cart-header-actions">Actions</div>
+                        </div>
+
+                        <div id="cart-items-list" class="cart-items-list">
+                            <!-- Cart items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+
+                        <div class="summary-line">
+                            <span>Subtotal (<span id="total-items">0</span> items):</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+
+                        <div class="summary-line">
+                            <span>Shipping:</span>
+                            <span id="shipping-cost">FREE</span>
+                        </div>
+
+                        <div class="summary-line">
+                            <span>Tax:</span>
+                            <span id="tax-amount">$0.00</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-line total-line">
+                            <span><strong>Total:</strong></span>
+                            <span id="cart-total"><strong>$0.00</strong></span>
+                        </div>
+
+                        <div class="cart-actions">
+                            <button class="checkout-btn" onclick="proceedToCheckout()">
+                                Proceed to Checkout
+                            </button>
+                            <a href="home.html" class="continue-shopping-link">
+                                Continue Shopping
+                            </a>
+                        </div>
+
+                        <div class="promo-code">
+                            <h4>Have a promo code?</h4>
+                            <div class="promo-input-group">
+                                <input type="text" id="promo-code" placeholder="Enter promo code">
+                                <button class="apply-promo-btn">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart backdrop -->
+    <div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+
+    <!-- Cart sidebar (same as other pages but hidden by default) -->
+    <aside id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Cart</h2>
+            <button class="cart-close-btn" onclick="closeCart()">&times;</button>
+        </div>
+        <ul id="cart-items"></ul>
+        <p id="cart-total-sidebar"><strong>Total:</strong> $0.00</p>
+        <button class="go-to-cart-btn" onclick="goToCartPage()">Go to Cart</button>
+        <button class="checkout-btn">Checkout</button>
+    </aside>
+
+    <footer>
+        <p>&copy; 2025 Simple Ecom. All rights reserved.</p>
+    </footer>
+
+    <!-- Load scripts in proper order -->
+    <script src="scripts/api.js"></script>
+    <script src="scripts/auth-manager.js"></script>
+    <script src="scripts/cart-manager.js"></script>
+    <script src="scripts/products.js"></script>
+    <script src="scripts/order-manager.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>

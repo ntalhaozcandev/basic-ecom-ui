@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Simple Ecom</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="home.html">Simple Ecom</a>
+            </div>
+            <section class="search-section">
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search products...">
+                    <select id="category">
+                        <option value="all">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="books">Books</option>
+                    </select>
+                </div>
+            </section>
+            <nav>
+                <a href="login.html">Login</a>
+            </nav>
+            <div class="header-right">
+                <!-- Auth section will be injected here by auth-manager -->
+                <button class="cart-btn">
+                    🛒 Cart (<span id="cart-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="home.html">Home</a> / <span id="product-category">Category</span> / <span
+            id="product-name">Product</span>
+    </nav>
+
+    <main class="product-detail-main">
+        <div class="product-detail-container">
+            <div class="left-column">
+                <div class="product-image-section">
+                    <img id="product-image" src="" alt="Product Image" class="main-product-image">
+                    <div class="image-thumbnails">
+                        <!-- Thumbnail images will be added here -->
+                    </div>
+                </div>
+
+                <div class="product-info-section">
+                    <h1 id="product-title">Product Name</h1>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-text">(4.0) 123 reviews</span>
+                    </div>
+                    <div class="product-price">
+                        <span id="product-price-value" class="current-price">$0.00</span>
+                        <span class="original-price">$0.00</span>
+                    </div>
+
+                    <div class="product-description">
+                        <h3>Description</h3>
+                        <p id="product-description-text">Product description will be loaded here...</p>
+                    </div>
+
+                    <div class="product-features">
+                        <h3>Key Features</h3>
+                        <ul id="product-features-list">
+                            <!-- Features will be loaded here -->
+                        </ul>
+                    </div>
+
+                    <div class="product-options">
+                        <div class="quantity-selector">
+                            <label for="quantity">Quantity:</label>
+                            <div class="quantity-controls">
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                                <input type="number" id="quantity" value="1" min="1" max="10">
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="add-to-cart-btn large" id="add-to-cart-detail">
+                                Add to Cart
+                            </button>
+                            <button class="buy-now-btn">
+                                Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-tabs">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="showTab('reviews')">Reviews</button>
+                        <button class="tab-header" onclick="showTab('specifications')">Specifications</button>
+                        <button class="tab-header" onclick="showTab('shipping')">Shipping & Returns</button>
+                    </div>
+
+                    <div id="reviews" class="tab-content active">
+                        <h3>Customer Reviews</h3>
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="reviewer-name">John D.</span>
+                                <span class="review-rating">★★★★★</span>
+                                <span class="review-date">2 days ago</span>
+                            </div>
+                            <p class="review-text">Great product! Exactly what I was looking for. Fast shipping and excellent
+                                quality.</p>
+                        </div>
+                        <div class="review">
+                            <div class="review-header">
+                                <span class="reviewer-name">Sarah M.</span>
+                                <span class="review-rating">★★★★☆</span>
+                                <span class="review-date">1 week ago</span>
+                            </div>
+                            <p class="review-text">Good value for money. Works as expected, though delivery took a bit longer than
+                                anticipated.</p>
+                        </div>
+                    </div>
+
+                    <div id="specifications" class="tab-content">
+                        <h3>Product Specifications</h3>
+                        <table class="specs-table">
+                            <tr>
+                                <td>Brand</td>
+                                <td id="spec-brand">-</td>
+                            </tr>
+                            <tr>
+                                <td>Model</td>
+                                <td id="spec-model">-</td>
+                            </tr>
+                            <tr>
+                                <td>Weight</td>
+                                <td id="spec-weight">-</td>
+                            </tr>
+                            <tr>
+                                <td>Dimensions</td>
+                                <td id="spec-dimensions">-</td>
+                            </tr>
+                            <tr>
+                                <td>Warranty</td>
+                                <td id="spec-warranty">1 Year</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="shipping" class="tab-content">
+                        <h3>Shipping & Returns</h3>
+                        <div class="shipping-info">
+                            <h4>Shipping Options</h4>
+                            <ul>
+                                <li><strong>Standard Shipping:</strong> 5-7 business days - FREE</li>
+                                <li><strong>Express Shipping:</strong> 2-3 business days - $9.99</li>
+                                <li><strong>Next Day Delivery:</strong> 1 business day - $19.99</li>
+                            </ul>
+
+                            <h4>Return Policy</h4>
+                            <p>30-day return policy. Items must be in original condition with all packaging and accessories.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="related-products-sidebar">
+                <h3>Related Products</h3>
+                <div id="related-products-list" class="related-products-list">
+                    <!-- Related products will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart backdrop -->
+    <div id="cart-backdrop" class="cart-backdrop" onclick="closeCart()"></div>
+
+    <!-- Cart sidebar (same as home page) -->
+    <aside id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Cart</h2>
+            <button class="cart-close-btn" onclick="closeCart()">&times;</button>
+        </div>
+        <ul id="cart-items"></ul>
+        <p id="cart-total"><strong>Total:</strong> $0.00</p>
+        <button class="go-to-cart-btn" onclick="goToCartPage()">Go to Cart</button>
+        <button class="checkout-btn" onclick="proceedToCheckout()">Checkout</button>
+    </aside>
+
+    <footer>
+        <p>&copy; 2025 Simple Ecom. All rights reserved.</p>
+    </footer>
+
+    <!-- Load scripts in proper order -->
+    <script src="scripts/api.js"></script>
+    <script src="scripts/auth-manager.js"></script>
+    <script src="scripts/cart-manager.js"></script>
+    <script src="scripts/products.js"></script>
+    <script src="scripts/order-manager.js"></script>
+    <script src="scripts/product-detail.js"></script>
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>
