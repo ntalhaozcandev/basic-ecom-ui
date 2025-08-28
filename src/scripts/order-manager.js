@@ -486,7 +486,6 @@ class OrderManager {
             throw error;
         }
     }
-    }
 
     generateOrderNumber() {
         const timestamp = Date.now();
