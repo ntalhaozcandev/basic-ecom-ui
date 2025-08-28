@@ -127,8 +127,8 @@ class CartPageManager {
         
         cartItem.innerHTML = `
             <div class="cart-item-product">
-                <img src="${itemImage || '../basic-ecom-ui/src/images/dummy-product.jpg'}" alt="${itemName}" class="cart-item-image"
-                     onerror="this.src='../basic-ecom-ui/src/images/dummy-product.jpg'">
+                <img src="${itemImage || 'images/dummy-product.jpg'}" alt="${itemName}" class="cart-item-image"
+                     onerror="this.src='images/dummy-product.jpg'">
                 <div class="cart-item-details">
                     <h4>${itemName}</h4>
                     <p class="cart-item-category">${this.capitalizeFirst(itemCategory)}</p>

@@ -219,7 +219,7 @@ function displayCheckoutItems(cart) {
         }
         
         // Create fallback image
-        const fallbackImage = '../basic-ecom-ui/src/images/dummy-product.jpg';
+        const fallbackImage = 'images/dummy-product.jpg';
         if (!itemImage) {
             itemImage = fallbackImage;
         }
@@ -234,7 +234,7 @@ function displayCheckoutItems(cart) {
         itemElement.innerHTML = `
             <div class="item-image">
                 <img src="${itemImage}" alt="${itemName}"
-                     onerror="if(this.getAttribute('data-fallback-tried') !== 'true') { this.setAttribute('data-fallback-tried', 'true'); this.src='../basic-ecom-ui/src/images/dummy-product.jpg'; }">
+                     onerror="if(this.getAttribute('data-fallback-tried') !== 'true') { this.setAttribute('data-fallback-tried', 'true'); this.src='images/dummy-product.jpg'; }">
             </div>
             <div class="item-details">
                 <h4>${itemName}</h4>
