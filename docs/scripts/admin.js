@@ -256,7 +256,7 @@ class AdminManager {
             row.innerHTML = `
                 <td>${product._id ? product._id.slice(-8) : product.id}</td>
                 <td>
-                    <img src="${imageUrl || '../src/images/dummy-product.jpg'}" 
+                    <img src="${imageUrl || '../basic-ecom-ui/src/images/dummy-product.jpg'}" 
                          alt="${product.title || product.name}" 
                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                 </td>

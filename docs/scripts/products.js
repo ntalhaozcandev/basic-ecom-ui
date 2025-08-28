@@ -286,7 +286,7 @@ class ProductManager {
 
         productCard.innerHTML = `
             <img src="${productImage}" alt="${productTitle}" 
-                 onerror="this.src='../src/images/dummy-product.jpg'">
+                 onerror="this.src='../basic-ecom-ui/src/images/dummy-product.jpg'">
             <h3>${productTitle}</h3>
             <p class="price">${productPrice}</p>
             <p class="category">${this.capitalizeFirst(product.category || '')}</p>
@@ -608,7 +608,7 @@ class ProductDetailManager {
             productImageEl.src = productImage;
             productImageEl.alt = productName;
             productImageEl.onerror = function() {
-                this.src = '../src/images/dummy-product.jpg';
+                this.src = '../basic-ecom-ui/src/images/dummy-product.jpg';
             };
         }
 
@@ -728,7 +728,7 @@ class ProductDetailManager {
         
         // If no valid images, use placeholder
         if (images.length === 0) {
-            images = ['../src/images/dummy-product.jpg'];
+            images = ['../basic-ecom-ui/src/images/dummy-product.jpg'];
         }
         
         this.renderImageThumbnails(images);
@@ -749,7 +749,7 @@ class ProductDetailManager {
             
             // Add error handling for broken images
             thumbnail.onerror = function() {
-                this.src = '../src/images/dummy-product.jpg';
+                this.src = '../basic-ecom-ui/src/images/dummy-product.jpg';
             };
             
             thumbnail.addEventListener('click', () => {
@@ -783,7 +783,7 @@ class ProductDetailManager {
             productCard.innerHTML = `
                 <img src="${productImage}" alt="${productName}" 
                      onclick="productDetailManager.navigateToProduct('${productId}')"
-                     onerror="this.src='../src/images/dummy-product.jpg'">
+                     onerror="this.src='../basic-ecom-ui/src/images/dummy-product.jpg'">
                 <div class="related-product-info">
                     <h4 onclick="productDetailManager.navigateToProduct('${productId}')">${productName}</h4>
                     <p class="related-product-price">${this.formatPrice(productPrice)}</p>
