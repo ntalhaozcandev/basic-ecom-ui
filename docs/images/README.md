@@ -17,4 +17,4 @@ Place your dummy/placeholder product image here. This image will be used as a fa
 - Content: Generic product placeholder or your brand logo
 
 ## Usage
-All fallback images throughout the application now reference `../images/dummy-product.jpg` instead of generating placeholder images or using external services.
+All fallback images throughout the application now reference `../src/images/dummy-product.jpg` instead of generating placeholder images or using external services.

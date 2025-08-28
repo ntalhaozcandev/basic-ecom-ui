@@ -445,7 +445,7 @@ function showNotification(message) {
 // Utility function to create fallback image
 function createFallbackImage(width = 150, height = 150, text = 'No Image') {
     // Return path to dummy image instead of generating data URLs
-    return '../images/dummy-product.jpg';
+    return '../src/images/dummy-product.jpg';
 }
 
 // Initialize the application when DOM is ready

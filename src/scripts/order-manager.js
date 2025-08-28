@@ -169,8 +169,8 @@ class OrderManager {
             
             itemElement.innerHTML = `
                 <div class="item-image">
-                    <img src="${itemImage || '../images/dummy-product.jpg'}" alt="${itemName}"
-                         onerror="this.src='../images/dummy-product.jpg'">
+                    <img src="${itemImage || '../src/images/dummy-product.jpg'}" alt="${itemName}"
+                         onerror="this.src='../src/images/dummy-product.jpg'">
                 </div>
                 <div class="item-details">
                     <h4>${itemName}</h4>
