@@ -394,76 +394,98 @@ class OrderManager {
         
         const subtotal = cartManager.calculateSubtotal();
         const taxAmount = subtotal * this.TAX_RATE;
-        const total = subtotal + this.shippingCost + taxAmount;
+        
+        // Get shipping cost from shipping manager if available
+        let shippingCost = this.shippingCost;
+        if (typeof shippingManager !== 'undefined') {
+            const selectedRate = shippingManager.getSelectedRate();
+            if (selectedRate) {
+                shippingCost = selectedRate.rate;
+            }
+        }
+        
+        const total = subtotal + shippingCost + taxAmount;
         
         const orderPayload = {
             customerInfo: orderData,
-            items: cartManager.cart,
+            items: cartManager.cart.map(item => ({
+                id: item.product?._id || item.id,
+                name: item.product?.title || item.name,
+                price: item.product?.price || item.price,
+                quantity: item.quantity,
+                image: item.product?.image || item.image
+            })),
             summary: {
                 subtotal: subtotal,
-                shipping: this.shippingCost,
+                shipping: shippingCost,
                 tax: taxAmount,
                 total: total
             },
-            paymentMethod: orderData.payment,
-            shippingMethod: orderData.shipping
+            paymentMethod: document.querySelector('input[name="payment"]:checked')?.value || 'card',
+            shippingMethod: document.querySelector('input[name="shipping"]:checked')?.value || 'standard'
         };
 
         try {
-            // Check if API is available before trying to use it
-            if (typeof api === 'undefined') {
-                console.log('API not available, using localStorage fallback directly');
-                throw new Error('API not available');
+            // Create order
+            console.log('Creating order with payload:', orderPayload);
+            const orderResponse = await api.createOrder(orderPayload);
+            console.log('Order created successfully:', orderResponse);
+            
+            this.currentOrder = orderResponse;
+            
+            // Process payment if card payment is selected
+            const selectedPayment = document.querySelector('input[name="payment"]:checked');
+            if (selectedPayment && selectedPayment.value === 'card' && typeof paymentManager !== 'undefined') {
+                console.log('Processing card payment...');
+                
+                try {
+                    const amountInCents = Math.round(total * 100); // Convert to cents
+                    await paymentManager.processPaymentFromForm(
+                        amountInCents,
+                        orderResponse._id || orderResponse.id,
+                        false, // Don't use payment intent
+                        'STRIPE'
+                    );
+                    
+                    console.log('Payment processed successfully');
+                } catch (paymentError) {
+                    console.error('Payment processing failed:', paymentError);
+                    // Order was created but payment failed
+                    this.showError('Order created but payment failed. Please contact support with order ID: ' + (orderResponse._id || orderResponse.id));
+                    return;
+                }
             }
             
-            // Try to create order via API
-            console.log('Attempting to create order via API with payload:', orderPayload);
-            const orderResponse = await api.createOrder(orderPayload);
-            console.log('API order response:', orderResponse);
+            // Create shipping label if shipping manager is available
+            if (typeof shippingManager !== 'undefined' && shippingManager.getSelectedRate()) {
+                try {
+                    console.log('Creating shipping label...');
+                    await shippingManager.createShippingLabel(orderResponse._id || orderResponse.id);
+                    console.log('Shipping label created successfully');
+                } catch (shippingError) {
+                    console.error('Failed to create shipping label:', shippingError);
+                    // Don't fail the order for shipping label issues
+                    console.log('Order successful but shipping label creation failed');
+                }
+            }
             
-            // Clear cart after successful order
+            // Clear cart and redirect to success page
             await cartManager.clearCart();
+            this.showSuccess('Order placed successfully!');
             
-            const orderNumber = orderResponse.orderNumber || orderResponse.id || 'Unknown';
-            this.showSuccess(`Order placed successfully! Order Number: ${orderNumber}`);
+            // Store order details for confirmation page
+            localStorage.setItem('lastOrder', JSON.stringify(this.currentOrder));
             
-            // Reset processing flag after success
-            this.isProcessingOrder = false;
-            
+            // Redirect to success/confirmation page
             setTimeout(() => {
-                window.location.href = 'home.html';
-            }, 3000);
+                window.location.href = 'order-confirmation.html?orderId=' + (orderResponse._id || orderResponse.id);
+            }, 2000);
             
         } catch (error) {
-            console.error('API order creation failed, using fallback:', error);
-            
-            // Fallback to local storage
-            const orderSummary = {
-                ...orderPayload,
-                orderDate: new Date().toISOString(),
-                orderNumber: this.generateOrderNumber(),
-                id: Date.now()
-            };
-            
-            console.log('Fallback order summary:', orderSummary);
-            console.log('Generated order number:', orderSummary.orderNumber);
-            
-            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-            orders.push(orderSummary);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            
-            // Clear cart
-            await cartManager.clearCart();
-            
-            this.showSuccess(`Order placed successfully! Order Number: ${orderSummary.orderNumber}`);
-            
-            // Reset processing flag after fallback success
-            this.isProcessingOrder = false;
-            
-            setTimeout(() => {
-                window.location.href = 'home.html';
-            }, 3000);
+            console.error('Order processing failed:', error);
+            throw error;
         }
+    }
     }
 
     generateOrderNumber() {

@@ -8,30 +8,161 @@ function formatPrice(price) {
     }) + ' ₺';
 }
 
-// Checkout page initialization - lightweight version
-// Main functionality is handled by order-manager.js
+// Checkout page initialization - enhanced with payment and shipping
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Checkout page (legacy): DOMContentLoaded fired');
+    console.log('Checkout page: DOMContentLoaded fired');
     
-    // Wait for order manager to be available
+    // Wait for all managers to be available
     let attempts = 0;
     const maxAttempts = 50;
 
-    while (attempts < maxAttempts && typeof orderManager === 'undefined') {
+    while (attempts < maxAttempts && (
+        typeof orderManager === 'undefined' ||
+        typeof paymentManager === 'undefined' ||
+        typeof shippingManager === 'undefined'
+    )) {
         await new Promise(resolve => setTimeout(resolve, 100));
         attempts++;
     }
 
-    if (typeof orderManager !== 'undefined') {
-        console.log('Checkout page (legacy): Order manager found, initializing...');
-        // Initialize the order manager
-        await orderManager.initialize();
+    if (typeof orderManager !== 'undefined' && 
+        typeof paymentManager !== 'undefined' && 
+        typeof shippingManager !== 'undefined') {
+        console.log('Checkout page: All managers found, initializing...');
+        await initializeEnhancedCheckout();
     } else {
-        console.log('Checkout page (legacy): Order manager not found, using fallback');
-        // Fallback initialization for display only
+        console.log('Checkout page: Managers not found, using fallback');
         await initializeFallbackCheckout();
     }
 });
+
+// Enhanced checkout initialization with payment and shipping
+async function initializeEnhancedCheckout() {
+    console.log('Checkout page: Using enhanced initialization with payment and shipping');
+    
+    const cart = JSON.parse(localStorage.getItem('simpleEcomCart') || '[]');
+    
+    if (cart.length === 0) {
+        alert('Your cart is empty. Redirecting to home page.');
+        window.location.href = 'home.html';
+        return;
+    }
+
+    // Initialize all components
+    displayCheckoutItems(cart);
+    updateOrderSummary(cart);
+    
+    // Initialize payment manager
+    paymentManager.initializePaymentForm('card-details');
+    
+    // Initialize shipping manager
+    shippingManager.initializeShipping();
+    
+    // Setup enhanced event listeners
+    initializeEnhancedEventListeners();
+    
+    // Initialize order manager
+    await orderManager.initialize();
+}
+
+// Enhanced event listeners including payment and shipping
+function initializeEnhancedEventListeners() {
+    // Payment method switching
+    const paymentMethods = document.querySelectorAll('input[name="payment"]');
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', togglePaymentDetails);
+    });
+
+    // Same address checkbox
+    const sameAddressCheckbox = document.getElementById('same-address');
+    if (sameAddressCheckbox) {
+        sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
+    }
+
+    // Calculate shipping button
+    const calculateShippingBtn = document.getElementById('calculate-shipping');
+    if (calculateShippingBtn) {
+        calculateShippingBtn.addEventListener('click', handleCalculateShipping);
+    }
+
+    // Auto-calculate shipping when address changes
+    const addressFields = ['zip', 'state', 'city', 'country'];
+    addressFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('blur', debounce(autoCalculateShipping, 1000));
+        }
+    });
+
+    // Card input formatting (handled by payment manager)
+    // Payment form is now handled by paymentManager
+
+    console.log('Enhanced event listeners initialized');
+}
+
+// Handle calculate shipping button click
+async function handleCalculateShipping() {
+    const button = document.getElementById('calculate-shipping');
+    const loadingElement = document.querySelector('.loading-rates');
+    
+    try {
+        // Show loading state
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Calculating...';
+        }
+        if (loadingElement) {
+            loadingElement.style.display = 'block';
+        }
+
+        await shippingManager.calculateShippingForOrder();
+        
+        // Update button text
+        if (button) {
+            button.textContent = 'Recalculate Shipping';
+        }
+    } catch (error) {
+        console.error('Failed to calculate shipping:', error);
+        if (button) {
+            button.textContent = 'Try Again';
+        }
+    } finally {
+        // Hide loading state
+        if (button) {
+            button.disabled = false;
+        }
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+    }
+}
+
+// Auto-calculate shipping when address changes
+async function autoCalculateShipping() {
+    const zipInput = document.getElementById('zip');
+    if (zipInput && zipInput.value.length >= 5) {
+        console.log('Auto-calculating shipping for zip:', zipInput.value);
+        try {
+            await shippingManager.calculateShippingForOrder();
+        } catch (error) {
+            console.log('Auto-calculate shipping failed:', error);
+            // Don't show error for auto-calculation
+        }
+    }
+}
+
+// Debounce utility function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 // Simplified fallback initialization - display only, no form handling
 async function initializeFallbackCheckout() {
@@ -208,51 +339,16 @@ function initializeBasicEventListeners() {
 }
 
 function updateShippingCost() {
-    const selectedShipping = document.querySelector('input[name="shipping"]:checked');
-    if (!selectedShipping) return;
-
-    const shippingCostElement = document.getElementById('shipping-cost');
-    let shippingCost = 0;
-    
-    switch (selectedShipping.value) {
-        case 'standard':
-            shippingCost = 0;
-            if (shippingCostElement) shippingCostElement.textContent = 'FREE';
-            break;
-        case 'express':
-            shippingCost = 9.99;
-            if (shippingCostElement) shippingCostElement.textContent = '$9.99';
-            break;
-        case 'overnight':
-            shippingCost = 19.99;
-            if (shippingCostElement) shippingCostElement.textContent = '$19.99';
-            break;
-        default:
-            shippingCost = 0;
-            if (shippingCostElement) shippingCostElement.textContent = 'FREE';
+    // This function is now handled by shipping manager
+    // Keep for compatibility but delegate to shipping manager
+    const selectedRate = shippingManager.getSelectedRate();
+    if (selectedRate) {
+        const shippingCostElement = document.getElementById('shipping-cost');
+        if (shippingCostElement) {
+            shippingCostElement.textContent = `$${selectedRate.rate.toFixed(2)}`;
+        }
+        shippingManager.updateOrderTotal();
     }
-    
-    // Update total with current cart
-    let cart = [];
-    if (typeof cartManager !== 'undefined') {
-        cart = cartManager.cart; // Access cart property directly
-    } else {
-        cart = JSON.parse(localStorage.getItem('simpleEcomCart') || '[]');
-    }
-    
-    let subtotal = 0;
-    cart.forEach(item => {
-        const product = item.product || item;
-        const price = parseFloat(product.price || 0);
-        const quantity = parseInt(item.quantity || 1);
-        subtotal += price * quantity;
-    });
-    
-    const TAX_RATE = 0.08;
-    const taxAmount = subtotal * TAX_RATE;
-    const total = subtotal + taxAmount + shippingCost;
-    
-    updateElement('order-total', formatPrice(total));
 }
 
 function togglePaymentDetails() {

@@ -357,12 +357,91 @@ class ApiClient {
         return this.get('/orders');
     }
 
+    async getMyOrders() {
+        return this.get('/orders/myOrders');
+    }
+
     async getOrder(orderId) {
         return this.get(`/orders/${orderId}`);
     }
 
     async updateOrderStatus(orderId, status) {
         return this.put(`/orders/${orderId}`, { status });
+    }
+
+    // Payment API methods
+    async createPaymentIntent(amount, currency, orderId, metadata = {}) {
+        return this.post('/payments/intents', {
+            amount,
+            currency,
+            orderId,
+            metadata
+        });
+    }
+
+    async confirmPaymentIntent(paymentIntentId, paymentMethodData, processor = 'STRIPE') {
+        return this.post(`/payments/intents/${paymentIntentId}/confirm`, {
+            paymentIntentId,
+            paymentMethodData,
+            processor
+        });
+    }
+
+    async getPaymentIntent(paymentIntentId) {
+        return this.get(`/payments/intents/${paymentIntentId}`);
+    }
+
+    async processPayment(amount, orderId, paymentMethodData, processor = 'STRIPE') {
+        return this.post('/payments/process', {
+            amount,
+            orderId,
+            processor,
+            paymentMethodData
+        });
+    }
+
+    async refundPayment(transactionId, amount = 0, reason = '') {
+        return this.post('/payments/refund', {
+            transactionId,
+            amount,
+            reason
+        });
+    }
+
+    async getTransaction(transactionId) {
+        return this.get(`/payments/${transactionId}`);
+    }
+
+    async getPaymentHistory() {
+        return this.get('/payments/history');
+    }
+
+    // Shipping API methods
+    async calculateShippingRates(packageInfo, destination) {
+        return this.post('/shipping/rates', {
+            packageInfo,
+            destination
+        });
+    }
+
+    async createShippingLabel(orderId, selectedRate, packageInfo) {
+        return this.post('/shipping/labels', {
+            orderId,
+            selectedRate,
+            packageInfo
+        });
+    }
+
+    async trackShipment(trackingNumber) {
+        return this.get(`/shipping/track/${trackingNumber}`);
+    }
+
+    async getOrderShipping(orderId) {
+        return this.get(`/shipping/orders/${orderId}`);
+    }
+
+    async cancelShipment(shipmentId) {
+        return this.delete(`/shipping/shipments/${shipmentId}`);
     }
 
     // User/Admin API methods

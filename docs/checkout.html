@@ -85,30 +85,19 @@
                         </div>
 
                         <!-- Shipping Method -->
-                        <div class="form-section">
+                        <div class="form-section" id="shipping-section">
                             <h2>Shipping Method</h2>
-                            <div class="shipping-options">
-                                <label class="shipping-option">
-                                    <input type="radio" name="shipping" value="standard" checked>
-                                    <div class="shipping-info">
-                                        <div class="shipping-name">Standard Shipping</div>
-                                        <div class="shipping-details">5-7 business days - FREE</div>
-                                    </div>
-                                </label>
-                                <label class="shipping-option">
-                                    <input type="radio" name="shipping" value="express">
-                                    <div class="shipping-info">
-                                        <div class="shipping-name">Express Shipping</div>
-                                        <div class="shipping-details">2-3 business days - $9.99</div>
-                                    </div>
-                                </label>
-                                <label class="shipping-option">
-                                    <input type="radio" name="shipping" value="overnight">
-                                    <div class="shipping-info">
-                                        <div class="shipping-name">Overnight Delivery</div>
-                                        <div class="shipping-details">Next business day - $19.99</div>
-                                    </div>
-                                </label>
+                            <div class="shipping-calculation">
+                                <button type="button" id="calculate-shipping" class="calculate-shipping-btn">
+                                    Calculate Shipping Rates
+                                </button>
+                                <small class="shipping-note">Enter your address above to see available shipping options</small>
+                            </div>
+                            <div id="shipping-rates" class="shipping-options">
+                                <!-- Shipping rates will be loaded here -->
+                                <div class="loading-rates" style="display: none;">
+                                    <p>Calculating shipping rates...</p>
+                                </div>
                             </div>
                         </div>
 
@@ -137,17 +126,50 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="expiry">Expiry Date *</label>
-                                        <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5">
+                                        <label for="expiry-month">Expiry Month *</label>
+                                        <select id="expiry-month" name="expiryMonth" required>
+                                            <option value="">Month</option>
+                                            <option value="1">01</option>
+                                            <option value="2">02</option>
+                                            <option value="3">03</option>
+                                            <option value="4">04</option>
+                                            <option value="5">05</option>
+                                            <option value="6">06</option>
+                                            <option value="7">07</option>
+                                            <option value="8">08</option>
+                                            <option value="9">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="cvv">CVV *</label>
-                                        <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4">
+                                        <label for="expiry-year">Expiry Year *</label>
+                                        <select id="expiry-year" name="expiryYear" required>
+                                            <option value="">Year</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                            <option value="2031">2031</option>
+                                            <option value="2032">2032</option>
+                                            <option value="2033">2033</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cvc">CVC *</label>
+                                        <input type="text" id="cvc" name="cvc" placeholder="123" maxlength="4">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="card-name">Name on Card *</label>
-                                    <input type="text" id="card-name" name="cardName">
+                                    <label for="billing-email">Billing Email *</label>
+                                    <input type="email" id="billing-email" name="billingEmail">
+                                </div>
+                                <div class="payment-status-container">
+                                    <div id="payment-status" class="payment-status"></div>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +233,7 @@
                             </div>
                             <div class="summary-line">
                                 <span>Shipping:</span>
-                                <span id="shipping-cost">FREE</span>
+                                <span id="shipping-cost">Calculate shipping</span>
                             </div>
                             <div class="summary-line">
                                 <span>Tax:</span>
@@ -264,6 +286,8 @@
     <script src="scripts/api.js"></script>
     <script src="scripts/auth-manager.js"></script>
     <script src="scripts/cart-manager.js"></script>
+    <script src="scripts/payment-manager.js"></script>
+    <script src="scripts/shipping-manager.js"></script>
     <script src="scripts/products.js"></script>
     <script src="scripts/order-manager.js"></script>
     <script src="scripts/checkout.js"></script>
